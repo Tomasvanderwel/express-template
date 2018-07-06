@@ -1,0 +1,5 @@
+--require test/helpers
+--reporter spec
+--no-timeouts
+--recursive
+--exit

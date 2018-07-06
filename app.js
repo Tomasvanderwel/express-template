@@ -1,9 +1,7 @@
 // App Settings
-
 require('dotenv').load();
 
 // App Modules
-
 var express = require('express');
 var path = require('path');
 var morgan = require('morgan');
@@ -13,7 +11,6 @@ var favicon = require('serve-favicon');
 var util = require('./modules/util/basic');
 
 // Express Setup
-
 var port = util.parseInt(process.env.PORT);
 var app = express();
 if (process.env.NODE_ENV === 'dev') app.use(morgan('dev'));
@@ -24,15 +21,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(favicon(path.join(__dirname, 'public', 'favicon.png')));
+app.use(favicon(path.join(__dirname, 'public', './img/favicon.png')));
 
 // Route setup
-
 var index = require('./routes/index');
 app.use('./routes', index);
 
 // Handlers
-
 app.use(function (req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
