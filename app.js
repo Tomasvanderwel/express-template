@@ -15,17 +15,24 @@ var port = util.parseInt(process.env.PORT);
 var app = express();
 if (process.env.NODE_ENV === 'dev') app.use(morgan('dev'));
 else app.use(morgan('tiny'));
-// app.set('views', './views');
-// app.set('view engine', 'pug');
+app.set('views', './views');
+app.set('view engine', 'pug');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(favicon(path.join(__dirname, 'public', './img/favicon.png')));
+app.use(favicon(path.join(__dirname, 'public', './author/img/favicon.png')));
 
 // Route setup
-var index = require('./routes/index');
-app.use('./routes', index);
+//var index = require('./routes/index');
+
+app.get('/', function(req, res) {
+    return res.render('skeleton.pug', {});
+});
+
+app.get('/test', function(req, res) {
+    return res.render('content/test.pug');
+});
 
 // Handlers
 app.use(function (req, res, next) {

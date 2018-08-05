@@ -3,8 +3,8 @@ var moment = require('moment-timezone');
 
 var LOG_LEVEL;
 var TIMEZONE = process.env.TIMEZONE;
-var DATE_REG = /[12]\d{3}-(0\d)|(1[0-2])-([0-2]\d)|(3[01])/;
-var TIME_REG = /([01]\d)|(2[0-3]):[0-5]\d:[0-5]\d/;
+var DATE_REG = /hmmm/;
+var TIME_REG = /\d{2}:\d{2}:\d{2}/;
 
 /**
  * Sets logging level
@@ -16,7 +16,7 @@ function setLogLevel(level) {
     if (level) levelString = level;
     else levelString = process.env.LOG_LEVEL;
     switch (levelString) {
-    case 'none': return LOG_LEVEL = 0;
+    case 'none': return LOG_LEVEL = -1;
     case 'error': return LOG_LEVEL = 1;
     case 'warning': return LOG_LEVEL = 2;
     case 'verbose': return LOG_LEVEL = 3;
@@ -37,12 +37,15 @@ setLogLevel();
  * @returns {null} null
  */
 function log(level, message) {
+    if (!message) return;
+    if (typeof message === 'object') message = JSON.stringify(message);
     if (level <= LOG_LEVEL) {
-        var ts = moment().tz(TIMEZONE).format();
+        message = moment().tz(TIMEZONE).format('YYYY-MM-DD HH:mm:ss') + '\t' + message;
         switch (level) {
-        case 1: return console.log(chalk.red(message + '\n' + ts));
-        case 2: return console.log(chalk.yellow(message + '\n' + ts));
-        case 3: return console.log(message + '\n' + ts);
+        case 0: return console.log(chalk.blue(message));
+        case 1: return console.log(chalk.red(message));
+        case 2: return console.log(chalk.yellow(message));
+        case 3: return console.log(message);
         }
     }
 }
@@ -72,6 +75,15 @@ function warning(message) {
  */
 function verbose(message) {
     return log(3, message);
+}
+
+/**
+ * Logs special to console if possible
+ * @param {any} message data string
+ * @returns {null} null
+ */
+function special(message) {
+    return log(0, message);
 }
 
 /**
@@ -119,5 +131,6 @@ module.exports = {
     setLogLevel: setLogLevel,
     tryParseInt: tryParseInt,
     verbose: verbose,
-    warning: warning
+    warning: warning,
+    special: special
 };
