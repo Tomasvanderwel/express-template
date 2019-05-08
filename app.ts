@@ -2,9 +2,9 @@ import * as express from 'express';
 import * as cors from 'cors';
 import * as cookieParser from 'cookie-parser';
 import { json, urlencoded } from 'body-parser';
-import { load } from 'dotenv';
+import { config } from 'dotenv';
 
-load();
+config();
 
 const app = express();
 const port = process.env.PORT || 3000;
